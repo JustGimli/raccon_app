@@ -1,36 +1,27 @@
 <?php
 
+function isMobileDevice($userAgent)
+{
+    $patterns = ["/iPhone/i", "/iPod/i", "/iPad/i", "/Android/i"];
 
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $userAgent)) {
+            return true;
+        }
+    }
 
-function isMobileDevice($userAgent) {
-	$patterns = [
-		'/iPhone/i',
-		'/iPod/i',
-		'/iPad/i',
-		'/Android/i'
-	];
-
-	foreach ($patterns as $pattern) {
-		if (preg_match($pattern, $userAgent)) {
-			return true;
-		}
-	}
-
-	return false;
+    return false;
+    // return true;
 }
 
-if(!isMobileDevice($_SERVER['HTTP_USER_AGENT'])){
-	?>
+if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
 	<div style="background: #000; width:100%; height:100%">
 		<div style="text-align: center;color:#fff;vertical-align: middle;height: 100%;display: flex;flex-direction: column;justify-content: center;">
 			Пожалуйста, используйте телефон для доступа к приложению!
 		</div>
 	</div>
 
-	<?php
-	die();
-}
-
+	<?php die();}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +29,7 @@ if(!isMobileDevice($_SERVER['HTTP_USER_AGENT'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Раскрути енота!</title>
-    <link rel="stylesheet" href="styles.css?=<?=time()?>">
+    <link rel="stylesheet" href="styles.css?=<?= time() ?>">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.13/lottie.min.js"></script>
@@ -734,7 +725,7 @@ if(!isMobileDevice($_SERVER['HTTP_USER_AGENT'])){
 		background-color: #ccc;
 	}
 </style>
-<script src="script.js?=<?=time()?>"></script>
+<script src="script.js?=<?= time() ?>"></script>
 <script>
 
 </script>
