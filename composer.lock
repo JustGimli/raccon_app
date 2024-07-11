@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c2e749df5d66e9a3290b88239de2495",
+    "content-hash": "9cc95ff824015eb6ef2d1f4078dca74c",
     "packages": [
         {
             "name": "clgsru/composer-modify-autoload",
@@ -515,7 +515,10 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-pdo": "*",
+        "ext-memcached": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

@@ -1,13 +1,8 @@
 <?php
-require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/vendor/autoload.php";
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
-
-use Dotent\Dotenv;
-
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 header("Content-type: text/html; charset=utf-8");
 
@@ -365,7 +360,7 @@ $config = [
     "database" => [
         "bdname" => "andreyi2_racdev",
         "bduser" => "andreyi2_racdev",
-        "bdhost" => "localhost",
+        "bdhost" => "andreyi2.beget.tech",
         "bdpassword" => "i&Vt2NtM",
     ],
 ];
@@ -380,14 +375,14 @@ $db = new PDO(
     $config["database"]["bdpassword"]
 );
 $db->query("SET session wait_timeout=60");
-$db->query("SET GLOBAL connect_timeout=60");
-$db->query("SET GLOBAL interactive_timeout=60");
+// $db->query("SET GLOBAL connect_timeout=60");
+// $db->query("SET GLOBAL interactive_timeout=60");
 
 $mem = new Memcached();
 $mem->addServer("localhost", 11211);
 
 // classes autoloader
-if (!isset($admin_context)) {
+if (!isset($admin_context) && !function_exists("my_autoloader")) {
     function my_autoloader($class)
     {
         include "Classes/" . $class . ".php";

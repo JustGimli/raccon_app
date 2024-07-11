@@ -1,5 +1,8 @@
 <?php
 
+require_once __DIR__ . "/../config.php";
+$config = include __DIR__ . "/../config.php";
+
 function isMobileDevice($userAgent)
 {
     $patterns = ["/iPhone/i", "/iPod/i", "/iPad/i", "/Android/i"];
@@ -56,6 +59,7 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
         let currentFrame = 0;
         let currentTime = 0;
         let isPlaying = false;
+        let hostUrl = '<?= $_ENV["HOST_URL"] ?>';
 
 	</script>
 
@@ -415,7 +419,8 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
         //var outputDiv = document.getElementById('output');
         //hamster.textContent = 'Ответ от сервера: ' + tg.initData;
         var xhr = new XMLHttpRequest();
-        var url = 'https://tg.appenot.com/back/init.php'; // Замените 'your_server_url' на URL вашего сервера
+
+        var url =  hostUrl; // Замените 'your_server_url' на URL вашего сервера
 
         // Установка параметров запроса
         xhr.open('POST', url, true);
