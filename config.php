@@ -10,6 +10,8 @@ $envFile = ".env.dev";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, $envFile);
 $dotenv->load();
 
+$hostUrl = $_ENV["HOST_URL"] ?? "https://tg.appenot.com/back/init.php";
+
 if (!isset($_ENV["HOST_URL"])) {
     error_log("HOST_URL is not set in the environment variables.");
     exit("Environment variables are not set correctly.");

@@ -57,7 +57,7 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
         let currentFrame = 0;
         let currentTime = 0;
         let isPlaying = false;
-        let hostUrl = '<?= $_ENV["HOST_URL"] ?>';
+        let hostUrl = '<?= $hostUrl ?>';
     </script>
 
 </head>
