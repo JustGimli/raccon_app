@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . "/../config.php";
-$config = include __DIR__ . "/../config.php";
 
 function isMobileDevice($userAgent)
 {
@@ -14,17 +13,16 @@ function isMobileDevice($userAgent)
     }
 
     return false;
-    // return true;
 }
 
 if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
-	<div style="background: #000; width:100%; height:100%">
-		<div style="text-align: center;color:#fff;vertical-align: middle;height: 100%;display: flex;flex-direction: column;justify-content: center;">
-			Пожалуйста, используйте телефон для доступа к приложению!
-		</div>
-	</div>
+    <div style="background: #000; width:100%; height:100%">
+        <div style="text-align: center;color:#fff;vertical-align: middle;height: 100%;display: flex;flex-direction: column;justify-content: center;">
+            Пожалуйста, используйте телефон для доступа к приложению!
+        </div>
+    </div>
 
-	<?php die();}
+    <?php die();}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,10 +31,10 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Раскрути енота!</title>
     <link rel="stylesheet" href="styles.css?=<?= time() ?>">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-	<script src="https://telegram.org/js/telegram-web-app.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.13/lottie.min.js"></script>
-	<script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.13/lottie.min.js"></script>
+    <script>
         let isRequestInProgress = false;
         let score = 0;
         let rotation = 0;
@@ -60,181 +58,192 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
         let currentTime = 0;
         let isPlaying = false;
         let hostUrl = '<?= $_ENV["HOST_URL"] ?>';
-
-	</script>
+    </script>
 
 </head>
-<body style="background-color: #2d3053;">
-	<div id="preloader" style="position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;z-index: 9999;background-color: #242839;box-shadow: inset 0px 2px 20px #4c56d8;flex-direction: column;opacity: 1;transition: opacity 2s ease;">
-		<div style="border: 10px solid #f3f3f3;border-top: 10px solid #4b0bc0;border-radius: 50%;width: 50px;height: 50px;animation: spin 2s linear infinite;"></div>
-		<div style="color: #fff;margin-top: 20px;">
-			Загрузка...
-		</div>
-	</div>
-    <div class="container" style="display:none;" id="container">
-	    <div class="content" style="margin-bottom:100px;height: 100%;">
+<body>
+    <div id="welcome-modal" class="preview_welcome">
+                   <div class="preview_welcome_step" id="welcome-step-1">
+                       <img src="https://vk.com/sticker/1-182-256b" alt="Welcome Image">
+                       <p>Собирай билеты и выигрывай призы в крипто лотерее</p>
+                       <button onclick="nextWelcomeStep()" class="btn">Понятно</button>
+                   </div>
+                   <div class="preview_welcome_step" id="welcome-step-2" style="display:none;">
+                       <img src="https://vk.com/sticker/1-177-256b" alt="Play Image">
+                       <p>Выполняй задания, играй, приглашай друзей чтобы собрать больше билетов</p>
+                       <button onclick="closeWelcomeModal()" class="btn">Играть</button>
+                   </div>
+    </div>
+<div id="preloader" style="position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;z-index: 9999;background-color: #242839;box-shadow: inset 0px 2px 20px #4c56d8;flex-direction: column;opacity: 1;transition: opacity 2s ease;">
+    <div style="border: 10px solid #f3f3f3;border-top: 10px solid #4b0bc0;border-radius: 50%;width: 50px;height: 50px;animation: spin 2s linear infinite;"></div>
+    <div style="color: #fff;margin-top: 20px;">
+        Загрузка...
+    </div>
+</div>
+<div class="container" style="display:none;" id="container">
+    <div class="content" style="margin-bottom:100px;height: 100%;">
 
-		    <div class="tab-content active" id="tab1" style="height: 100%;">
-			    <div class="profit-container">
-				    <div class="profit-block">
-					    <div>Прибыль за тап</div>
-					    <div class="profit-detail">
-						    <i class="fas fa-hand-pointer"></i>
-						    <span><span class="tap_earn">0</span> <span class="tap_earn_coin_name"></span> </span>
-					    </div>
-				    </div>
-				    <div class="profit-block">
-					    <div>Прибыль в час</div>
-					    <div class="profit-detail">
-						    <i class="fa-solid fa-coins"></i>
-						    <span><span class="hour_earn">0</span> <span class="hour_earn_coin_name"></span></span>
-					    </div>
-				    </div>
-			    </div>
+        <div class="tab-content active" id="tab1" style="height: 100%;">
+            <div class="profit-container">
+                <div class="profit-block">
+                    <div>Прибыль за тап</div>
+                    <div class="profit-detail">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span><span class="tap_earn">0</span> <span class="tap_earn_coin_name"></span> </span>
+                    </div>
+                </div>
+                <div class="profit-block">
+                    <div>Прибыль в час</div>
+                    <div class="profit-detail">
+                        <i class="fa-solid fa-coins"></i>
+                        <span><span class="hour_earn">0</span> <span class="hour_earn_coin_name"></span></span>
+                    </div>
+                </div>
+            </div>
 
-			    <div style="height: 60%;display: flex;
+            <div style="height: 60%;display: flex;
     align-content: flex-start;
     flex-direction: column;
     justify-content: center;">
-				    <div class="profit-container">
-					    <div class="">
-						    <div style="text-decoration: underline; color: white;" id="sound-box">
-							    Включить настроение 🔊
-						    </div>
-						    <div style="margin-top: 5px; font-size: 12px;    height: 13px;" id="sound-box-bonus"> </div>
-					    </div>
+                <div class="profit-container">
+                    <div class="">
+                        <div style="text-decoration: underline; color: white;" id="sound-box">
+                            Включить настроение 🔊
+                        </div>
+                        <div style="margin-top: 5px; font-size: 12px;    height: 13px;" id="sound-box-bonus"> </div>
+                    </div>
 
-				    </div>
-				   <!-- <h2 style="padding-bottom: 20px">Раскрути енота 🦡</h2>-->
+                </div>
+                <!-- <h2 style="padding-bottom: 20px">Раскрути енота 🦡</h2>-->
 
-				    <div id="lottie-hamster" class="lottie-container box-shadow-anime-racoon"></div>
-				    <p>Монеты: <span id="score"></span></p>
-				    <audio id="click-sound" src="pedro3.mp3" loop></audio>
-			    </div>
-			    <div style="width: 90%;position:fixed;bottom: 125px;">
-				    <div onclick="showTab('tab7')" style="display: flex;font-size: 13px;justify-content: space-between;">
-					    <span>Подробнее-&gt;</span>
-					    <span>Энергия <span id="energy">0</span>/<span id="max_energy">0</span></span>
-					    <span>Уровень <span id="user_lvl">0</span>/10</span>
-				    </div>
-				    <div id="level-container2">
-					    <div id="level-bar"></div>
-				    </div>
-			    </div>
+                <div id="lottie-hamster" class="lottie-container box-shadow-anime-racoon"></div>
+                <p>Монеты: <span id="score"></span></p>
+                <audio id="click-sound" src="pedro3.mp3" loop></audio>
+            </div>
+            <div style="width: 90%;position:fixed;bottom: 125px;">
+                <div onclick="showTab('tab7')" style="display: flex;font-size: 13px;justify-content: space-between;">
+                    <span>Подробнее-&gt;</span>
+                    <span>Энергия <span id="energy">0</span>/<span id="max_energy">0</span></span>
+                    <span>Уровень <span id="user_lvl">0</span>/10</span>
+                </div>
+                <div id="level-container2">
+                    <div id="level-bar"></div>
+                </div>
+            </div>
 
-			    <div id="modal_current_hour_earn_coins" class="modal">
-				    <div class="modal-content">
-					    <span class="close">×</span>
-					    <div style="font-size: 20px;margin: 10px 0;padding: 20px;">
-						    Пока вас не было вы заработали:
-						    <div style="margin-top: 10px;border: 1px solid #9C27B0;padding: 10px;/* box-shadow: inset 0px 2px 20px #9C27B0; */ border-radius: 10px;">
-							    <span id="current_hour_earn_coins"></span>
-							    <span id="current_hour_earn_name"></span>
-						    </div>
-					    </div>
-				    </div>
-			    </div>
+            <div id="modal_current_hour_earn_coins" class="modal">
+                <div class="modal-content">
+                    <span class="close">×</span>
+                    <div style="font-size: 20px;margin: 10px 0;padding: 20px;">
+                        Пока вас не было вы заработали:
+                        <div style="margin-top: 10px;border: 1px solid #9C27B0;padding: 10px;/* box-shadow: inset 0px 2px 20px #9C27B0; */ border-radius: 10px;">
+                            <span id="current_hour_earn_coins"></span>
+                            <span id="current_hour_earn_name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			    <div id="modal_bonus-from-friend" class="modal">
-				    <div class="modal-content">
-					    <span class="close">×</span>
-					    <div style="font-size: 20px;margin: 10px 0;padding: 20px;">
-						    Вы получили бонус от друга!
-						    <div style="margin-top: 10px;border: 1px solid #9C27B0;padding: 10px;/* box-shadow: inset 0px 2px 20px #9C27B0; */ border-radius: 10px;">
-							    <span id="bonus-from-friend"></span>
-						    </div>
-					    </div>
-				    </div>
-			    </div>
-		    </div>
-		    <div class="tab-content" id="tab2">
-			    <!-- Содержимое для Tab 2 -->
-			    <div>
-				    <img src="https://icons.iconarchive.com/icons/iconarchive/incognito-animal-2/512/Racoon-icon.png" style="width: 100px;">
-			    </div>
-			    <h2 class="header">Пригласите друзей крутить енота!</h2>
-			    <p>Зовите своих друзей в игру и получайте отличные награды!</p>
-			    <div class="invite-input-container">
-				    <input type="text" class="invite-input" value="" id="invite-link" readonly>
-				    <button class="copy-button" onclick="copyLink()">Копировать</button>
-			    </div>
-			    <div id="friend_btn_share"></div>
-			    <p class="reward" style="margin-top: 30px;">Ваша награда: <strong><span id="friend_earn"></span></strong> за каждого друга</p>
-			    <p class="friends-count" style="margin-top: 30px;">Количество друзей: <strong><span id="friends_count">0</span></strong></p>
-		    </div>
-		    <div class="tab-content" id="tab3">
-			    <h2>Прокачайся!</h2>
-			    <div class="profit-container">
-				    <div class="profit-block box-shadow-anime">
-					    <div>Прибыль за тап</div>
-					    <div class="profit-detail">
-						    <i class="fas fa-hand-pointer"></i>
-						    <span><span class="tap_earn">0</span> <span class="tap_earn_coin_name"></span> </span>
-					    </div>
-				    </div>
-				    <div class="profit-block">
-					    <div>Прибыль в час</div>
-					    <div class="profit-detail">
-						    <i class="fa-solid fa-coins"></i>
-						    <span><span class="hour_earn">0</span> <span class="hour_earn_coin_name"></span></span>
-					    </div>
-				    </div>
-			    </div>
-			    <div class="upgrade-block" style="margin-top: 20px;border-radius: 8px;">
-				    <div>
-					    <div style="margin-top: 10px;">Ваш уровень: <span id="user_lvl_withno_star"></span></div>
-					    <div class="profit-detail" style="text-align: left;justify-content: space-evenly;margin: 5px 0px 0px 0;display: flex;flex-direction: column;align-items: flex-start;">
-						    <span id="user_lvl_star"></span>
-					    </div>
-				    </div>
-				    <div>
-					    <div class="upgrade-btn" onclick="showTab('tab7')">Прокачать</div>
-				    </div>
+            <div id="modal_bonus-from-friend" class="modal">
+                <div class="modal-content">
+                    <span class="close">×</span>
+                    <div style="font-size: 20px;margin: 10px 0;padding: 20px;">
+                        Вы получили бонус от друга!
+                        <div style="margin-top: 10px;border: 1px solid #9C27B0;padding: 10px;/* box-shadow: inset 0px 2px 20px #9C27B0; */ border-radius: 10px;">
+                            <span id="bonus-from-friend"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab2">
+            <!-- Содержимое для Tab 2 -->
+            <div>
+                <img src="https://icons.iconarchive.com/icons/iconarchive/incognito-animal-2/512/Racoon-icon.png" style="width: 100px;">
+            </div>
+            <h2 class="header">Пригласите друзей крутить енота!</h2>
+            <p>Зовите своих друзей в игру и получайте отличные награды!</p>
+            <div class="invite-input-container">
+                <input type="text" class="invite-input" value="" id="invite-link" readonly>
+                <button class="copy-button" onclick="copyLink()">Копировать</button>
+            </div>
+            <div id="friend_btn_share"></div>
+            <p class="reward" style="margin-top: 30px;">Ваша награда: <strong><span id="friend_earn"></span></strong> за каждого друга</p>
+            <p class="friends-count" style="margin-top: 30px;">Количество друзей: <strong><span id="friends_count">0</span></strong></p>
+        </div>
+        <div class="tab-content" id="tab3">
+            <h2>Прокачайся!</h2>
+            <div class="profit-container">
+                <div class="profit-block box-shadow-anime">
+                    <div>Прибыль за тап</div>
+                    <div class="profit-detail">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span><span class="tap_earn">0</span> <span class="tap_earn_coin_name"></span> </span>
+                    </div>
+                </div>
+                <div class="profit-block">
+                    <div>Прибыль в час</div>
+                    <div class="profit-detail">
+                        <i class="fa-solid fa-coins"></i>
+                        <span><span class="hour_earn">0</span> <span class="hour_earn_coin_name"></span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="upgrade-block" style="margin-top: 20px;border-radius: 8px;">
+                <div>
+                    <div style="margin-top: 10px;">Ваш уровень: <span id="user_lvl_withno_star"></span></div>
+                    <div class="profit-detail" style="text-align: left;justify-content: space-evenly;margin: 5px 0px 0px 0;display: flex;flex-direction: column;align-items: flex-start;">
+                        <span id="user_lvl_star"></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="upgrade-btn" onclick="showTab('tab7')">Прокачать</div>
+                </div>
 
-			    </div>
-			    <div onclick="showTab('tab9')" style="margin-top: 20px;text-decoration: underline;">
-				    Все характеристики
-			    </div>
-			    <h3 style="text-align: left;margin-top: 40px;">Улучшения:</h3>
-			    <div id="upgrade_box">
-			    </div>
+            </div>
+            <div onclick="showTab('tab9')" style="margin-top: 20px;text-decoration: underline;">
+                Все характеристики
+            </div>
+            <h3 style="text-align: left;margin-top: 40px;">Улучшения:</h3>
+            <div id="upgrade_box">
+            </div>
 
-			    <div id="modal-upgrade-stati-success" class="modal">
-				    <div class="modal-content">
-					    <span class="close">&times;</span>
-					    <p>Улучшено!</p>
-				    </div>
-			    </div>
-			    <div id="modal-upgrade-stati-nomoney" class="modal">
-				    <div class="modal-content upgrade-level-nomoney">
-					    <div id="msg"></div>
-					    <span class="close">&times;</span>
-					    <p>Недостаточно монет!</p>
-				    </div>
-			    </div>
+            <div id="modal-upgrade-stati-success" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Улучшено!</p>
+                </div>
+            </div>
+            <div id="modal-upgrade-stati-nomoney" class="modal">
+                <div class="modal-content upgrade-level-nomoney">
+                    <div id="msg"></div>
+                    <span class="close">&times;</span>
+                    <p>Недостаточно монет!</p>
+                </div>
+            </div>
 
-		    </div>
-		    <div class="tab-content" id="tab4">
-			    <!-- Содержимое для Tab 3 -->
-			    <h2>Выполняй задания - получай бонусы</h2>
-			    <div class="upgrade-container">
-				    <div class="upgrade-block">
-					    <div style="width: 50%;">
-						    <div style="margin-top: 16px;">🏆 Ежедневная награда</div>
-						    <div class="profit-detail" style="text-align: left;justify-content: space-evenly;margin: 15px 0px 0px 0;display: flex;flex-direction: column;align-items: flex-start;">
+        </div>
+        <div class="tab-content" id="tab4">
+            <!-- Содержимое для Tab 3 -->
+            <h2>Выполняй задания - получай бонусы</h2>
+            <div class="upgrade-container">
+                <div class="upgrade-block">
+                    <div style="width: 50%;">
+                        <div style="margin-top: 16px;">🏆 Ежедневная награда</div>
+                        <div class="profit-detail" style="text-align: left;justify-content: space-evenly;margin: 15px 0px 0px 0;display: flex;flex-direction: column;align-items: flex-start;">
 
-						    </div>
-					    </div>
-					    <div style="width: 42%;">
-						    <div style="text-align: center;">+5 000 000 монет</div>
-						    <div class="upgrade-btn"  onclick="showTab('tab10')" style="margin-top: 10px;text-align: center;">Получить</div>
-					    </div>
+                        </div>
+                    </div>
+                    <div style="width: 42%;">
+                        <div style="text-align: center;">+5 000 000 монет</div>
+                        <div class="upgrade-btn"  onclick="showTab('tab10')" style="margin-top: 10px;text-align: center;">Получить</div>
+                    </div>
 
-				    </div>
-				    <div class="upgrade-block">
-					    <div  style="width: 50%;">
-						    <div style="    margin-top: 16px;">🌀 Колесо удачи</div>
-						    <div class="profit-detail" style="
+                </div>
+                <div class="upgrade-block">
+                    <div  style="width: 50%;">
+                        <div style="    margin-top: 16px;">🌀 Колесо удачи</div>
+                        <div class="profit-detail" style="
     text-align: left;
     justify-content: space-evenly;
     margin: 15px 0px 0px 0;
@@ -245,147 +254,147 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
     /* margin-top: 5px; */
 ">
 
-							    <!--<span>Следующий шанс:</span><span style="
-    margin-top: 5px;
+                            <!--<span>Следующий шанс:</span><span style="
+margin-top: 5px;
 ">23ч 00м 40с
 </span>-->
-						    </div>
-					    </div>
-					    <div style="width: 42%;">
-						    <div style="text-align:center;" class="upgrade-btn" onclick="showTab('tab8')">Крутить колесо</div>
-					    </div>
+                        </div>
+                    </div>
+                    <div style="width: 42%;">
+                        <div style="text-align:center;" class="upgrade-btn" onclick="showTab('tab8')">Крутить колесо</div>
+                    </div>
 
-				    </div>
+                </div>
 
-				    <div id="tasks_box" style="width: 100%;">
-				    </div>
+                <div id="tasks_box" style="width: 100%;">
+                </div>
 
 
-			    </div>
+            </div>
 
-			    <div id="modal-chech_task-success" class="modal">
-				    <div class="modal-content">
-					    <span class="close">&times;</span>
-					    <p>Бонус начислен!</p>
-				    </div>
-			    </div>
-		    </div>
-		    <div class="tab-content" id="tab5">
-			    <h2>Скоро!</h2>
-			    <div style="font-size: 20px;">
-				    Каждую неделю <u>в прямом эфире</u> разыгрываем Айфон'ы 📱, деньги 💰, Dyson 💈 и другие призы!
-			    </div>
-			    <div style="border-radius: 8px;padding: 20px;border: 1px solid #4c56d8;margin: 40px 0px;font-size: 20px;font-weight: 600;">
-				    Ваши лотерейные билеты:<br>
-				    <div style="margin-top: 10px;font-weight: 600;"> 🎫 <span id="loto_ticket_count"></span></div>
-			    </div>
-			    <div style="font-size: 20px;">
-				    Прокачивай уровень ⬆️  и получай больше лотерейных билетов 🎫
-			    </div>
-			    <div style="font-size: 20px;margin-top: 20px;">
-				    Больше уровень - больше шанс выиграть!
-			    </div>
-		    </div>
-		    <div class="tab-content" id="tab6" style="text-align: initial">
-			    <!-- Содержимое для Tab 6 -->
-			    <h1>Внимание, геймеры!</h1>
-			    <p>Готовьтесь к невероятному событию! Мы рады объявить о предстоящем <strong>Airdrop в нашей любимой игре!</strong></p>
+            <div id="modal-chech_task-success" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Бонус начислен!</p>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab5">
+            <h2>Скоро!</h2>
+            <div style="font-size: 20px;">
+                Каждую неделю <u>в прямом эфире</u> разыгрываем Айфон'ы 📱, деньги 💰, Dyson 💈 и другие призы!
+            </div>
+            <div style="border-radius: 8px;padding: 20px;border: 1px solid #4c56d8;margin: 40px 0px;font-size: 20px;font-weight: 600;">
+                Ваши лотерейные билеты:<br>
+                <div style="margin-top: 10px;font-weight: 600;"> 🎫 <span id="loto_ticket_count"></span></div>
+            </div>
+            <div style="font-size: 20px;">
+                Прокачивай уровень ⬆️  и получай больше лотерейных билетов 🎫
+            </div>
+            <div style="font-size: 20px;margin-top: 20px;">
+                Больше уровень - больше шанс выиграть!
+            </div>
+        </div>
+        <div class="tab-content" id="tab6" style="text-align: initial">
+            <!-- Содержимое для Tab 6 -->
+            <h1>Внимание, геймеры!</h1>
+            <p>Готовьтесь к невероятному событию! Мы рады объявить о предстоящем <strong>Airdrop в нашей любимой игре!</strong></p>
 
-			    <h2>Что вас ждет?</h2>
-			    <ul>
-				    <li><strong>Выпуск токена на биржах:</strong> Наши игровые монеты скоро станут токенами, которые можно будет обменивать на биржах.</li>
-				    <li><strong>Возможность продать монеты:</strong> Заработанные вами монеты можно будет продать за реальные деньги.</li>
-			    </ul>
+            <h2>Что вас ждет?</h2>
+            <ul>
+                <li><strong>Выпуск токена на биржах:</strong> Наши игровые монеты скоро станут токенами, которые можно будет обменивать на биржах.</li>
+                <li><strong>Возможность продать монеты:</strong> Заработанные вами монеты можно будет продать за реальные деньги.</li>
+            </ul>
 
-			    <h2>Когда это произойдет?</h2>
-			    <p>Точная дата пока неизвестна, поэтому следите за обновлениями! Airdrop начнется в ближайшее время.</p>
+            <h2>Когда это произойдет?</h2>
+            <p>Точная дата пока неизвестна, поэтому следите за обновлениями! Airdrop начнется в ближайшее время.</p>
 
-			    <h2>Как принять участие?</h2>
-			    <ol>
-				    <li>Крутите енота!</li>
-				    <li>Выполняйте как можно больше заданий.</li>
-				    <li>Зовите друзей.</li>
-				    <li>Зарабатывайте монеты и получайте свои заслуженные награды!</li>
-			    </ol>
+            <h2>Как принять участие?</h2>
+            <ol>
+                <li>Крутите енота!</li>
+                <li>Выполняйте как можно больше заданий.</li>
+                <li>Зовите друзей.</li>
+                <li>Зарабатывайте монеты и получайте свои заслуженные награды!</li>
+            </ol>
 
-			    <p><strong>Чем больше монет заработаете, тем больше денег и призов получите!</strong></p>
+            <p><strong>Чем больше монет заработаете, тем больше денег и призов получите!</strong></p>
 
-			    <p>Следите за новостями в игре и не забывайте делиться своими успехами в наших социальных сетях. Удачи, игроки!</p>
+            <p>Следите за новостями в игре и не забывайте делиться своими успехами в наших социальных сетях. Удачи, игроки!</p>
 
-			    <p>С наилучшими пожеланиями,<br>Команда крути енота!</p>
-		    </div>
-		    <div class="tab-content" id="tab7">
-			    <div class="levels-container" id="levels-box">
-			    </div>
-			    <div id="modal-upgrade-level-success" class="modal">
-				    <div class="modal-content">
-					    <span class="close">&times;</span>
-					    <p>Уровень повышен!</p>
-				    </div>
-			    </div>
-			    <div id="modal-upgrade-level-nomoney" class="modal">
-				    <div class="modal-content upgrade-level-nomoney">
-					    <span class="close">&times;</span>
-					    <p>Недостаточно монет!</p>
-				    </div>
-			    </div>
-		    </div>
-		    <div class="tab-content" id="tab8">
-			    <h2>Скоро!</h2>
-			    <!--<div class="wheel-container">
-				    <div id="wheel" class="wheel">
-					    <img src="https://static.tildacdn.com/tild3937-3762-4835-a539-323566363739/_.png" alt="Колесо удачи">
-				    </div>
-			    </div>
-			    <button class="spin-button" onclick="spinWheel()">Крутить колесо</button>
+            <p>С наилучшими пожеланиями,<br>Команда крути енота!</p>
+        </div>
+        <div class="tab-content" id="tab7">
+            <div class="levels-container" id="levels-box">
+            </div>
+            <div id="modal-upgrade-level-success" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Уровень повышен!</p>
+                </div>
+            </div>
+            <div id="modal-upgrade-level-nomoney" class="modal">
+                <div class="modal-content upgrade-level-nomoney">
+                    <span class="close">&times;</span>
+                    <p>Недостаточно монет!</p>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab8">
+            <h2>Скоро!</h2>
+            <!--<div class="wheel-container">
+                <div id="wheel" class="wheel">
+                    <img src="https://static.tildacdn.com/tild3937-3762-4835-a539-323566363739/_.png" alt="Колесо удачи">
+                </div>
+            </div>
+            <button class="spin-button" onclick="spinWheel()">Крутить колесо</button>
 
-			    <script>
-                    function spinWheel() {
-                        const wheel = document.getElementById('wheel');
-                        const randomDegree = Math.floor(Math.random() * 3600) + 360; // Обеспечивает достаточное количество оборотов
-                        wheel.style.transform = `rotate(${randomDegree}deg)`;
-                    }
-			    </script>-->
-		    </div>
+            <script>
+                function spinWheel() {
+                    const wheel = document.getElementById('wheel');
+                    const randomDegree = Math.floor(Math.random() * 3600) + 360; // Обеспечивает достаточное количество оборотов
+                    wheel.style.transform = `rotate(${randomDegree}deg)`;
+                }
+            </script>-->
+        </div>
 
-		    <div class="tab-content" id="tab9">
-			    <h2>Характеристики</h2>
-			    <div class="stati-container" id="stati_box" style="display: flex;">
+        <div class="tab-content" id="tab9">
+            <h2>Характеристики</h2>
+            <div class="stati-container" id="stati_box" style="display: flex;">
 
-			    </div>
-		    </div>
+            </div>
+        </div>
 
-		    <div class="tab-content" id="tab10">
-			    <div style="display: flex;justify-content: center;">
-				    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/reward-calendar-5598885-4687496.png" style="width: 100px;">
-			    </div>
-			    <h2>Ежедневная награда</h2>
-			    <div style=" padding: 10px; ">
-				    <div style="text-align: center; margin-top: 0;">Забирайте монеты за ежедневную игру без пропусков!</div>
-				    <ul style="list-style: none; padding-left: 0;" id="evryday_box">
+        <div class="tab-content" id="tab10">
+            <div style="display: flex;justify-content: center;">
+                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/reward-calendar-5598885-4687496.png" style="width: 100px;">
+            </div>
+            <h2>Ежедневная награда</h2>
+            <div style=" padding: 10px; ">
+                <div style="text-align: center; margin-top: 0;">Забирайте монеты за ежедневную игру без пропусков!</div>
+                <ul style="list-style: none; padding-left: 0;" id="evryday_box">
 
-				    </ul>
-			    </div>
+                </ul>
+            </div>
 
-			    <div id="modal-get-every-day-success" class="modal">
-				    <div class="modal-content">
-					    <span class="close">&times;</span>
-					    <p>Награда получена!</p>
-				    </div>
-			    </div>
-		    </div>
-	    </div>
-
-	    <div class="navigation">
-		    <div class="btn"  onclick="showTab('tab1')">Крути</div>
-		    <div class="btn"  onclick="showTab('tab2')">Друзья</div>
-		    <div class="btn"  onclick="showTab('tab3')">Улучшения</div>
-		    <div class="btn"  onclick="showTab('tab4')">Задания</div>
-		    <div class="btn"  onclick="showTab('tab5')">Лото</div>
-		    <div class="btn"  onclick="showTab('tab6')">Airdrop</div>
-	    </div>
-
+            <div id="modal-get-every-day-success" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Награда получена!</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="navigation">
+        <div class="btn"  onclick="showTab('tab1')">Крути</div>
+        <div class="btn"  onclick="showTab('tab2')">Друзья</div>
+        <div class="btn"  onclick="showTab('tab3')">Улучшения</div>
+        <div class="btn"  onclick="showTab('tab4')">Задания</div>
+        <div class="btn"  onclick="showTab('tab5')">Лото</div>
+        <div class="btn"  onclick="showTab('tab6')">Airdrop</div>
+    </div>
+
+</div>
 
 </body>
 <script>
@@ -405,6 +414,8 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
     window.onload = function() {
 
         tg = window.Telegram.WebApp;
+        let isFirstVisit = localStorage.getItem('firstVisit') === null;
+
 
         if(tg.version!='6.0' && tg.isVersionAtLeast(6.9)){
             tg.requestWriteAccess();
@@ -412,16 +423,18 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
 
 
         tg.setHeaderColor('#2d3053');
-       // tg.themeParams.text_color='#fff';
+        // tg.themeParams.text_color='#fff';
         //tg.setSecondaryBackgroundColor('#ffffff');
         tg.expand();
+
+        if (isFirstVisit) {
+            document.getElementById('welcome-modal').style.display = 'block';
+        }
 
         //var outputDiv = document.getElementById('output');
         //hamster.textContent = 'Ответ от сервера: ' + tg.initData;
         var xhr = new XMLHttpRequest();
-
-        var url =  hostUrl; // Замените 'your_server_url' на URL вашего сервера
-
+        var url = hostUrl
         // Установка параметров запроса
         xhr.open('POST', url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -432,7 +445,7 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
                 if(xhr.responseText!=0){
 
                     var response = JSON.parse(xhr.responseText);
-                  //  document.getElementById('username').textContent = response.username;
+                    //  document.getElementById('username').textContent = response.username;
                     document.getElementById('score').textContent = response.balance;
 
                     document.getElementById('levels-box').innerHTML = response.levels_box;
@@ -626,109 +639,144 @@ if (!isMobileDevice($_SERVER["HTTP_USER_AGENT"])) { ?>
 </script>
 
 <style>
-	html,
-	body {
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		padding: 0;
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #2d3053;
+        position: relative;
+        min-height: 100vh;
 
-		position: relative;
-		min-height: 100vh;
+    }
 
-	}
+    .preloader-hidden {
+        opacity: 0!important;
+    }
 
-	.preloader-hidden {
-		opacity: 0!important;
-	}
-
-	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
-	}
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
 
-	#board {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		overflow: hidden;
-		background-color: rgb(245, 247, 250);
-		/*margin-bottom: 200px;  Высота панели навигации */
+    #board {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        overflow: hidden;
+        background-color: rgb(245, 247, 250);
+        /*margin-bottom: 200px;  Высота панели навигации */
 
-	}
+    }
 
-	.card {
-		width: 90%;
-		height: 80%;
-		position: absolute;
-		top: 45%;
-		left: 50%;
-		border-radius: 1%;
-		box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
-		background-color: white;
-		transform: translateX(-50%) translateY(-50%) scale(0.95);
-	}
-	.navigation {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		/*height: 100px;  Высота панели навигации */
-		background-color: #373d83;
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-		flex-wrap: wrap;
-		padding: 5px 0px;
-		gap: 7px;
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: space-evenly;
-		/*border-top: 1px solid #ccc;*/
+    .card {
+        width: 90%;
+        height: 80%;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        border-radius: 1%;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        transform: translateX(-50%) translateY(-50%) scale(0.95);
+    }
+    .navigation {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        /*height: 100px;  Высота панели навигации */
+        background-color: #373d83;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        flex-wrap: wrap;
+        padding: 5px 0px;
+        gap: 7px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        /*border-top: 1px solid #ccc;*/
 
-	}
+    }
 
-	.btn {
-		display: inline-block;
-		width: 100px;
-		height: 40px;
-		text-align: center;
-		line-height: 40px;
-		font-weight: bold;
-		color: white;
-		background-color: #2d3053;
-		border-radius: 5px;
-		cursor: pointer;
-		border: 1px solid #131517;
-	}
+    .btn {
+        display: inline-block;
+        width: 100px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        font-weight: bold;
+        color: white;
+        background-color: #2d3053;
+        border-radius: 5px;
+        cursor: pointer;
+        border: 1px solid #131517;
+    }
 
-	.btn:hover {
-		background-color: #1e2036;
-	}
-	.tab-content {
-		display: none;
-	}
+    .btn:hover {
+        background-color: #1e2036;
+    }
+    .tab-content {
+        display: none;
+    }
 
-	.tab-content.active {
-		display: block;
-	}
-	.tabs {
-		display: flex;
-		justify-content: space-around;
-		margin-bottom: 20px;
-	}
+    .tab-content.active {
+        display: block;
+    }
+    .tabs {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
 
-	.tab {
-		padding: 10px 20px;
-		background-color: #f2f2f2;
-		cursor: pointer;
-	}
+    .tab {
+        padding: 10px 20px;
+        background-color: #f2f2f2;
+        cursor: pointer;
+    }
 
-	.tab.active {
-		background-color: #ccc;
-	}
+    .tab.active {
+        background-color: #ccc;
+    }
+
+
+
+
+    .preview_welcome {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        color: white;
+        background-color: #242839;
+        box-shadow: inset 0px 2px 20px #4c56d8;
+
+    }
+
+    .preview_welcome_step {
+        padding: 20px;
+        height: 100%;
+        max-width: 500px;
+        text-align: center;
+        display: flex ;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .modal-img {
+        max-width: 100%;
+        height: auto
+    }
+
+
+
 </style>
 <script src="script.js?=<?= time() ?>"></script>
 <script>

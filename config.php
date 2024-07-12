@@ -4,6 +4,21 @@ require_once __DIR__ . "/vendor/autoload.php";
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
+// Загрузка переменных среды
+// $envFile = file_exists(__DIR__ . "/.env.dev") ? ".env.dev" : ".env";
+$envFile = ".env.dev";
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, $envFile);
+$dotenv->load();
+
+if (!isset($_ENV["HOST_URL"])) {
+    error_log("HOST_URL is not set in the environment variables.");
+    exit("Environment variables are not set correctly.");
+}
+
+// header("Access-Control-Allow-Origin: http://localhost:8088");
+// if (isset($_ENV["DEBUG"])) {
+// }
+
 header("Content-type: text/html; charset=utf-8");
 
 $start_execute_time = time();

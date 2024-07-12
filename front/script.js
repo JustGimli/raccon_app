@@ -37,6 +37,20 @@ function showScorePopup(x, y) {
   }, 1500);
 }
 
+function nextWelcomeStep() {
+  document.getElementById("welcome-step-1").style.display = "none";
+  document.getElementById("welcome-step-2").style.display = "flex";
+}
+
+function closeWelcomeModal() {
+  document.getElementById("welcome-modal").style.display = "none";
+  localStorage.setItem("firstVisit", "false");
+}
+
+function openModal(id) {
+  document.getElementById(id).style.display = "block";
+}
+
 function showLowEnergy(x, y) {
   const popup = document.createElement("div");
   popup.classList.add("low_energy-popup");
